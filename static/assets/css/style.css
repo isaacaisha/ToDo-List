@@ -1,0 +1,92 @@
+body {
+    background-color: #E8FFD2;
+    padding: 1.9rem;
+}
+
+h1 {
+    border: 0.05rem solid;
+    border-radius: 0.9rem;
+    color: #F92929;
+    padding: 0.5rem;
+    text-align: center;
+}
+
+.h3_create {
+    color: #9A30F3;
+    text-align: center;
+}
+
+.h3_proceed {
+    color: #FF9200;
+    text-align: center;
+}
+
+.h3_done {
+    color: #059D11;
+    text-align: center;
+}
+
+.h3_clear_all {
+    color: #F92929;
+    text-align: center;
+}
+
+.reset {
+    color: #F92929;
+    margin-top: -1.9rem;
+    text-align: center;
+}
+
+.completed {
+    text-decoration: line-through;
+}
+
+.btn-success {
+    margin-top: 0.5rem;
+}
+
+hr {
+    margin: 0 3rem;
+    margin-top: 1rem;
+}
+
+#footer {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.fa-inverse {
+    background-color: #9A30F3;
+    border: 0.1rem solid #9DEE81;
+    border-radius: 55%;
+    color: #AEFAFC;
+}
+
+.fa-inverse:hover {
+    color: #6ABFA6;
+    width: 3.7rem;
+}
+
+.fas {
+    color: transparent !important;
+}
+
+a.api  {
+    text-decoration: underline;
+    font-style: italic;
+    color: magenta;
+}
+
+a.api:hover {
+    color: #6ABFA6;
+}
+
+.copyright {
+    color: #1295FA;
+}
+
+.copyright:hover {
+    text-decoration: none;
+}
+
+# --------------------------------------------------- 🔥👌🏿💚😇❤️🔥 ---------------------------------------------------#

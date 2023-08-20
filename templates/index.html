@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+
+{% block title %} Welcom€ {% endblock %}
+
+{% block head %}
+	{{ super() }}
+    <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='assets/images/favicon1.ico') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <h3 class="mb-4 h3_create">Create your To-Do list ¡!¡</h3>
+    <div class="todo_create">
+        <form method="post" action="{{ url_for('todo_create') }}">
+        {{ create_todo_form.csrf_token }} {# Add the CSRF token here #}
+        {% if error_message %}  {# Update the variable name here #}
+        <div class="alert alert-info">
+            {{ error_message }}  {# Update the variable name here #}
+        </div>
+        {% endif %}
+        <div class="form-group">
+            <label for="create_todo">Enter the To-Do, below:</label>
+            <input type="text" class="form-control" id="create_todo" name="create_todo" placeholder="Type here e.g. buy water ¡!¡" required>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Click To Create</button>
+        </div>
+        </form>
+    </div>
+</div>
+
+<hr>
+
+<div class="container mt-5">
+    <h3 class="mb-4  h3_proceed">Your To-Do to Proceed ¡!¡</h3>
+    <div class="todo_create">
+        <form method="post" action="{{ url_for('todo_create') }}">
+            {{ create_todo_form.csrf_token }} {# Add the CSRF token here #}
+            {% if error_message %}  {# Update the variable name here #}
+                <div class="alert alert-info">
+                    {{ error_message }}  {# Update the variable name here #}
+                </div>
+            {% endif %}
+            {% for todo in todos %}
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="todo_proceed_{{ loop.index }}" name="todo_proceed_{{ loop.index }}" value="{{ todo }}">
+                <label for="todo_proceed_{{ loop.index }}">{{ todo.text }}</label>
+            </div>
+            {% endfor %}
+        </form>
+    </div>
+</div>
+
+<hr>
+
+<div class="container mt-5">
+    <h3 class="mb-4 h3_done">Your To-Do Done ¡!¡</h3>
+    <div class="todo_done">
+        <form method="post" action="{{ url_for('todo_create') }}">
+            {{ btn_delete_form.csrf_token }} {# Add the CSRF token here #}
+            {% if error_message %}  {# Update the variable name here #}
+                <div class="alert alert-info">
+                    {{ error_message }}  {# Update the variable name here #}
+                </div>
+            {% endif %}
+            {% for todo in todos %}
+                <span id="todo_done_{{ loop.index }}" class="{% if todo.completed %}completed{% endif %}">
+                    {{ todo.text }}
+                </span><br>
+            {% endfor %}
+        </form>
+        <div class="text-center">
+            <button id="clear-done-btn" type="button" class="btn btn-success">Clear To-Do Done</button>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<div class="container mt-5">
+    <h3 class="mb-4 h3_clear_all">Clear All To-Do Items</h3>
+    <div class="reset">(Reset the Whole database ¡!¡)</div>
+    <div class="todo_clear_all">
+        <form method="post" action="{{ url_for('clear_all') }}">
+            {{ btn_delete_form.csrf_token }} {# Add the CSRF token here #}
+            {% if error_message %}  {# Update the variable name here #}
+            <div class="alert alert-info">
+                {{ error_message }}  {# Update the variable name here #}
+            </div>
+            {% endif %}
+            <div class="text-center">
+                <button id="clear-all-btn" type="submit" class="btn btn-danger">Clear All To-Do Items</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block footer %}
+
+<script>
+
+    // JavaScript to handle checkbox changes
+    document.addEventListener('DOMContentLoaded', function () {
+    const checkboxes = document.querySelectorAll('.form-check-input');
+    checkboxes.forEach(function (checkbox) {
+        checkbox.addEventListener('change', function () {
+            // Get the ID of the checkbox that was changed
+            const checkboxId = this.id;
+
+            // Construct the ID of the corresponding <span> element in the "Your To-Do Done" section
+            const todoId = checkboxId.split('_')[2];
+            const spanId = 'todo_done_' + todoId;
+
+            // Find the corresponding <span> element
+            const span = document.getElementById(spanId);
+
+            if (this.checked) {
+                span.classList.add('completed');
+            } else {
+                span.classList.remove('completed');
+            }
+        });
+    });
+
+    // Add an event listener to the "Clear To-Do Done" button
+    const clearDoneButton = document.getElementById('clear-done-btn');
+    clearDoneButton.addEventListener('click', function () {
+        // Find all the checked checkboxes
+        const checkedCheckboxes = document.querySelectorAll('.form-check-input:checked');
+        const todoIds = [];
+
+        // Loop through the checked checkboxes
+        checkedCheckboxes.forEach(function (checkbox) {
+            // Get the ID of the checkbox that was changed
+            const checkboxId = checkbox.id;
+            const todoId = checkboxId.split('_')[2]; // Change this line to use todoId directly
+            todoIds.push(todoId);
+
+            // Remove both the checkbox and its associated label
+            const todoElement = document.getElementById('todo_done_' + todoId);
+            if (todoElement) {
+                todoElement.parentNode.removeChild(todoElement);
+            }
+        });
+
+        // Send a POST request to the server to delete completed tasks
+        fetch('/clear_done', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ todoIds }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the response data if needed
+            console.log('Clear To-Do Done response:', data);
+
+            // Force a full page reload
+            window.location.href = '/';
+        })
+        .catch(error => {
+            console.error('Clear To-Do Done error:', error);
+        });
+    });
+});
+
+</script>
+
+{% endblock %}
